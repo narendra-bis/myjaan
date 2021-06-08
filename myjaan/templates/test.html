@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+{% block content %}
+<h1>Check for the operation</h1>
+
+
+<a href="{% url 'myapp:pels'%}"><button type="button">check Pelidrome</button></a>
+
+<a href="{% url 'myapp:prime'%}"><button type="button">check prime number</button></a>
+
+<a href="{% url 'myapp:fibon'%}"><button type="button">Create fibonacci series </button></a>
+
+<a href="{% url 'myapp:leapyr'%}"><button type="button">Check leap year </button></a>
+
+<a href="{% url 'myapp:revs'%}"><button type="button">Reverse the digit </button></a>
+
+
+
+{% endblock %}
+</body>

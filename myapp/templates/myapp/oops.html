@@ -1,0 +1,27 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h1> 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+</h1>
+
+{% endif %}
+<br>
+<form method="POST">	
+	{% csrf_token %}
+	{{ form }}
+	<br>
+	<button type="Submit">Submit</button>
+</form>
+<br>
+<br>
+
+<br>
+
+<a href="{% url 'myapp:index'%}"> <button type="button">Go to Home Page</button>  </a>
+{% endblock %}
