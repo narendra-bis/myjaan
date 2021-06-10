@@ -6,6 +6,8 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.decorators import login_required, permission_required
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from catalog.forms import RenewBookForm
+from django.http import HttpResponseRedirect
 
 
 # Create your views here.
@@ -123,10 +125,8 @@ class AllLoanedBooksByUserListView(LoginRequiredMixin, ListView):
 	def get_queryset(self):
 		return BookInstance.objects.filter(status__exact='o').order_by('due_back')
 
-
-	# def get_context_data(self, **kwargs):
-	# 	# Call the base implementation first to get the context
-	# 	context = super(LoanedBooksByUserListView, self).get_context_data(**kwargs)
-	# 	# Create any data and add it to the context
-	# 	context['alluser'] = BookInstance.objects.filter(status__exact='o').order_by('due_back')
-	# 	return context
+def renew_book_librarian(request, pk):
+	import pdb; pdb.set_trace()
+	book_instance = get_object_or_404(BookInstance, pk=pk)
+	form = RenewBookForm()
+	return render(request,'catalog/book_renew_librarian.html',{'form':form})

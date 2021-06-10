@@ -22,6 +22,10 @@ class Language(models.Model):
 	def __str__(self):
 		return self.name
 
+
+"""
+Model representing Author 
+"""
 class Author(models.Model):
 	first_name = models.CharField(max_length=100)
 	last_name = models.CharField(max_length=100)
@@ -108,7 +112,7 @@ class BookInstance(models.Model):
 	def __str__(self):
 		return self.book.title
 
-	# @property
+
 
 
 
