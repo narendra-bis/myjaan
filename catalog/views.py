@@ -3,12 +3,14 @@ from django.http import HttpResponse
 from catalog.models import Book, Author, BookInstance, Genre
 from django.views.generic.list import ListView 
 from django.views.generic.detail import DetailView
+from django.contrib.auth.decorators import login_required, permission_required
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Create your views here.
 
-
+@login_required
 def index(request):
 	"""view function for homepage of site"""
 	# Generate counts of some of the main objects
@@ -82,3 +84,49 @@ class AuthorListView(ListView):
 	context_object_name = 'author_list'
 	queryset = Author.objects.all()[:5]
 	template_name = "catalog/author_list.html"
+
+
+"""
+function for borrowed books individual
+"""
+# @permission_required('catalog.can_mark_returned')
+class LoanedBooksByUserListView(LoginRequiredMixin, ListView):
+	"""Generic class-based view listing books on loan to current user."""
+	model = BookInstance
+	template_name = 'catalog/bookinstance_list_borrowed_user.html'
+	paginate_by = 10
+	# import pdb;pdb.set_trace()
+
+	def get_queryset(self):
+		return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='o').order_by('due_back')
+
+
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get the context
+		context = super(LoanedBooksByUserListView, self).get_context_data(**kwargs)
+		# Create any data and add it to the context
+		context['alluser'] = BookInstance.objects.filter(status__exact='o').order_by('due_back')
+		return context
+
+
+
+"""
+function for all borrowed books
+"""
+class AllLoanedBooksByUserListView(LoginRequiredMixin, ListView):
+	"""Generic class-based view listing books on loan to current user."""
+	model = BookInstance
+	template_name = 'catalog/allbookinstance_list_borrowed_user.html'
+	paginate_by = 10
+	# import pdb;pdb.set_trace()
+
+	def get_queryset(self):
+		return BookInstance.objects.filter(status__exact='o').order_by('due_back')
+
+
+	# def get_context_data(self, **kwargs):
+	# 	# Call the base implementation first to get the context
+	# 	context = super(LoanedBooksByUserListView, self).get_context_data(**kwargs)
+	# 	# Create any data and add it to the context
+	# 	context['alluser'] = BookInstance.objects.filter(status__exact='o').order_by('due_back')
+	# 	return context

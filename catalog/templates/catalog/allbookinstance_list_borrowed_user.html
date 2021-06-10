@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>All Borrowed books </h1>
+
+
+{% if bookinstance_list %}
+    	{% if user.is_staff %}
+    	
+	    	{% for allbookinst in bookinstance_list %}
+	    	<li class="{% if allbookinst.is_overdue %} text-danger{% endif %}">
+	    		<a href="{% url 'catalog:book-detail' allbookinst.book.pk %}">{{allbookinst.book.title}}</a>{{allbookinst.due_back }} {{ allbookinst.borrower}}
+	    	</li>
+	    	{% endfor %}
+
+   		{% else %}
+    	<p>Not a staff member </p>
+    	
+    	{% endif %}
+
+{% else %}
+      <p>There are no books borrowed.</p>
+{% endif %}
+{% endblock %}

@@ -1,7 +1,8 @@
 import uuid
 from django.db import models
 from django.urls import reverse
-
+from django.contrib.auth.models import User
+from datetime import date
 
 # Create your models here.
 
@@ -80,6 +81,7 @@ Book instance
 class BookInstance(models.Model):
 	"""Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this particular book across whole library')
+	borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 	book = models.ForeignKey(Book, on_delete=models.PROTECT, null=True)
 	imprint = models.CharField(max_length=200)
 	due_back =  models.DateField(null=True, blank=True)
@@ -95,9 +97,19 @@ class BookInstance(models.Model):
 
 	class Meta:
 		ordering = ['due_back']
+		permissions = (("can_mark_returned", "Set book as returned"),)
+	
+	def is_overdue(self):
+		if self.due_back and date.today() > self.due_back :
+			return True
+		else:
+			return False
 
 	def __str__(self):
 		return self.book.title
+
+	# @property
+
 
 
 

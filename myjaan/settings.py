@@ -68,7 +68,7 @@ ROOT_URLCONF = 'myjaan.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR,'myjaan/templates'],
+        'DIRS': [os.path.join(BASE_DIR,'myjaan/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -140,3 +140,7 @@ MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 STATIC_URL = '/static/'
+
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
