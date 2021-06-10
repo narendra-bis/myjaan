@@ -13,11 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.conf.urls import url,include
+from django.conf.urls.static import static
 from django.contrib import admin
 from . import views
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets 
+from django.views.generic import RedirectView
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -40,8 +43,14 @@ router.register(r'users',UserViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'myapp/',include('myapp.urls')),
+    # url(r'myapp/',include('myapp.urls')),
+    url(r'',include('catalog.urls')),
     # url(r'', include(router.urls)),
     # url(r'api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-    url(r'',views.home),
+    # url(r'',views.home),
+    # url(r'', RedirectView.as_view(url='catalog/')),
 ]
+
+# Use static() to add url mapping to serve static files during development (only)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
