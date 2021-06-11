@@ -9,9 +9,10 @@
     	
 	    	{% for allbookinst in bookinstance_list %}
 	    	<li class="{% if allbookinst.is_overdue %} text-danger{% endif %}">
-	    		<a href="{% url 'catalog:book-detail' allbookinst.book.pk %}">{{allbookinst.book.title}}</a>{{allbookinst.due_back }} {{ allbookinst.borrower}}
-          <a href="{% url 'catalog:renew-book-librarian' allbookinst.pkid %}">Renew</a>
+	    		<a href="{% url 'catalog:book-detail' allbookinst.book.pk %}">{{allbookinst.book.title}}</a> Due Date:{{allbookinst.due_back }} User: {{ allbookinst.borrower}}
+          <a class="{% if allbookinst.is_overdue %} text-danger{% endif %}" href="{% url 'catalog:renew-book-librarian' allbookinst.pkid %}"> Renew </a>
 	    	{% endfor %}
+      </li>
 
    		{% else %}
     	<p>Not a staff member </p>

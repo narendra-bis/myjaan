@@ -30,6 +30,7 @@
           {%  if user.is_staff %}
           <p><b>Staff</b></p>
           <li><a href="{% url 'catalog:all-borrowed'%}">All Borrowed</a></li>
+          <li><a href="{% url 'catalog:author-create'%}">Create Author </a></li>
           {% else %}
           <p><b>Library User</b></p>
           {% endif %}

@@ -1,3 +1,5 @@
+
+import datetime 
 from django.shortcuts import render, redirect, reverse , get_object_or_404 
 from django.http import HttpResponse
 from catalog.models import Book, Author, BookInstance, Genre
@@ -6,8 +8,9 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.decorators import login_required, permission_required
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from catalog.forms import RenewBookForm
+from catalog.forms import RenewBookForm, AuthorCreateForm
 from django.http import HttpResponseRedirect
+from django.views.generic import CreateView
 
 
 # Create your views here.
@@ -84,7 +87,7 @@ class BookDetailView(DetailView):
 class AuthorListView(ListView):
 	model = Author
 	context_object_name = 'author_list'
-	queryset = Author.objects.all()[:5]
+	queryset = Author.objects.all()[:20]
 	template_name = "catalog/author_list.html"
 
 
@@ -125,8 +128,45 @@ class AllLoanedBooksByUserListView(LoginRequiredMixin, ListView):
 	def get_queryset(self):
 		return BookInstance.objects.filter(status__exact='o').order_by('due_back')
 
+
+
+
 def renew_book_librarian(request, pk):
-	import pdb; pdb.set_trace()
 	book_instance = get_object_or_404(BookInstance, pk=pk)
-	form = RenewBookForm()
-	return render(request,'catalog/book_renew_librarian.html',{'form':form})
+
+	# If this is a POST request then process the Form data
+	if request.method == "POST":
+		# Create a form instance and populate it with data from the request (binding):
+		form = RenewBookForm(request.POST)
+		if form.is_valid():
+			book_instance.due_back = form.cleaned_data['renewal_date']
+			book_instance.save()
+			return HttpResponseRedirect(reverse('catalog:all-borrowed'))
+
+	else:
+		proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+		form = RenewBookForm(initial={'renewal_date':proposed_renewal_date})
+	
+	context = {
+		'form': form,
+		'book_instance':book_instance 
+
+	}
+	return render(request,'catalog/book_renew_librarian.html',context)
+
+
+# class AuthorCreate(CreateView):
+# 	model = Author
+# 	form_class = AuthorCreateForm
+# 	template_name = "catalog/author_create.html"
+
+
+def create_author(request):
+	if request.method=="POST":
+		form = AuthorCreateForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect(reverse('catalog:authors'))
+	else:
+		form = AuthorCreateForm()
+	return render(request,'catalog/author_create.html',{'form':form})

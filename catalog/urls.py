@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^mybooks/',LoanedBooksByUserListView.as_view(),name='my-borrowed'),
     url(r'^allborrowed/',AllLoanedBooksByUserListView.as_view(),name='all-borrowed'),
     url(r'^bookrenew/(?P<pk>\d+)$',views.renew_book_librarian,name='renew-book-librarian'),
+    url(r'^cauthor/create/',views.create_author,name='author-create')
 ]

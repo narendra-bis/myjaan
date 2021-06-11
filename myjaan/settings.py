@@ -120,15 +120,22 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 
-TIME_ZONE = 'Europe/London'
+TIME_ZONE = 'Europe/Zurich'
 
 USE_I18N = True
-
-USE_L10N = True
-
+USE_L10N = False
 USE_TZ = True
 
+DATE_FORMAT = 'd.m.Y'
+DATETIME_FORMAT = 'd.m.Y H:i'
+TIME_FORMAT = 'H:i'
 
+SHORT_DATE_FORMAT = 'd.m.Y'
+SHORT_DATETIME_FORMAT = 'd.m.Y H:i'
+
+DATE_INPUT_FORMATS = ['%Y-%m-%d',      # '2006-10-25'
+'%m/%d/%Y',       # '10/25/2006'
+'%m/%d/%y']       # '10/25/06'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
