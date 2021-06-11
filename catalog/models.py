@@ -84,7 +84,8 @@ Book instance
 """
 class BookInstance(models.Model):
 	"""Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
-	id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this particular book across whole library')
+	pkid = models.CharField(max_length=100,primary_key=True)
+	id = models.UUIDField(default=uuid.uuid4, help_text='Unique ID for this particular book across whole library')
 	borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 	book = models.ForeignKey(Book, on_delete=models.PROTECT, null=True)
 	imprint = models.CharField(max_length=200)

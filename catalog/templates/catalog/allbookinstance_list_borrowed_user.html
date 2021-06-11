@@ -10,7 +10,7 @@
 	    	{% for allbookinst in bookinstance_list %}
 	    	<li class="{% if allbookinst.is_overdue %} text-danger{% endif %}">
 	    		<a href="{% url 'catalog:book-detail' allbookinst.book.pk %}">{{allbookinst.book.title}}</a>{{allbookinst.due_back }} {{ allbookinst.borrower}}
-          <a href="">Renew</a>
+          <a href="{% url 'catalog:renew-book-librarian' allbookinst.pkid %}">Renew</a>
 	    	{% endfor %}
 
    		{% else %}

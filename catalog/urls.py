@@ -16,5 +16,5 @@ urlpatterns = [
     url(r'^authors/',AuthorListView.as_view(),name='authors'),
     url(r'^mybooks/',LoanedBooksByUserListView.as_view(),name='my-borrowed'),
     url(r'^allborrowed/',AllLoanedBooksByUserListView.as_view(),name='all-borrowed'),
-    url(r'^booksdsfs/(?P<pk>\d+)$',views.renew_book_librarian,name='renew-book-librarian'),
+    url(r'^bookrenew/(?P<pk>\d+)$',views.renew_book_librarian,name='renew-book-librarian'),
 ]
