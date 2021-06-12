@@ -5,7 +5,8 @@
 <h1>Author List</h1>
 <ul>
 {% for author in author_list %}
-<li>{{ author.first_name }} {{ author.last_name }}</li>
+<li>{{ author.first_name }} {{ author.last_name }} <a href="{% url 'catalog:author-update' author.pk %}">Update</a>
+<a href="{% url 'catalog:del_author' author.pk %}">Delete</a></li>
 
 
 {% endfor %}

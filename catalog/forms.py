@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.forms import ModelForm
-from catalog.models import Author
+from catalog.models import Author,Genre
 
 class RenewBookForm(forms.Form):
 	renewal_date = forms.DateField(help_text="Enter a date between now and 4 weeks (default 3).")
@@ -27,7 +27,21 @@ class AuthorCreateForm(ModelForm):
 		model = Author
 		fields = '__all__'
 		labels = {'first_name':_('Enter the First Name')}
+		help_text = {'first_name':_('First Name')}
 
+
+
+class GenreCreateForm(ModelForm):
+	class Meta:
+		model = Genre
+		fields= '__all__'
+
+
+class AuthorDeleteForm(forms.Form):
+	class Meta:
+		model = Author
+		fields =''
+		
 
 
 

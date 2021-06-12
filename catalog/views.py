@@ -8,9 +8,12 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.decorators import login_required, permission_required
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from catalog.forms import RenewBookForm, AuthorCreateForm
+from catalog.forms import RenewBookForm, AuthorCreateForm, GenreCreateForm,AuthorDeleteForm
 from django.http import HttpResponseRedirect
 from django.views.generic import CreateView
+from django.contrib import messages
+from django.utils.translation import ugettext as _
+from django.db.models import ProtectedError
 
 
 # Create your views here.
@@ -90,6 +93,13 @@ class AuthorListView(ListView):
 	queryset = Author.objects.all()[:20]
 	template_name = "catalog/author_list.html"
 
+class GenreListView(ListView):
+	model = Genre
+	context_object_name = 'genre_list'
+	queryset = Genre.objects.all()[:20]
+	template_name = 'catalog/genre_list.html'
+
+	
 
 """
 function for borrowed books individual
@@ -141,6 +151,7 @@ def renew_book_librarian(request, pk):
 		if form.is_valid():
 			book_instance.due_back = form.cleaned_data['renewal_date']
 			book_instance.save()
+			messages.success(request,_("Book renewed successfully"))
 			return HttpResponseRedirect(reverse('catalog:all-borrowed'))
 
 	else:
@@ -166,7 +177,63 @@ def create_author(request):
 		form = AuthorCreateForm(request.POST)
 		if form.is_valid():
 			form.save()
+			messages.success(request,_('Auther created successfully'))
 			return HttpResponseRedirect(reverse('catalog:authors'))
 	else:
 		form = AuthorCreateForm()
 	return render(request,'catalog/author_create.html',{'form':form})
+
+
+def create_genre(request):
+	if request.method=='POST':
+		form = GenreCreateForm(request.POST)
+		if form.is_valid():
+			form.save()
+			messages.success(request,_('Genre created successfully'))
+			return HttpResponseRedirect(reverse('catalog:genres-ls'))
+	else:
+		form = GenreCreateForm()
+	return render(request,'catalog/genre_create.html',{'form':form})
+
+
+"""
+Function for update the author
+"""
+def update_author(request,pk):
+	author_instance = get_object_or_404(Author,pk=pk)
+	if request.method=="POST":
+		form =AuthorCreateForm(request.POST)
+		if form.is_valid():
+			author_instance.first_name=form.cleaned_data['first_name']
+			author_instance.last_name=form.cleaned_data['last_name']
+			author_instance.date_of_birth=form.cleaned_data['date_of_birth']
+			author_instance.date_of_death=form.cleaned_data['date_of_death']
+			author_instance.save()
+			messages.success(request,_('Updated Successfully'))
+			return HttpResponseRedirect(reverse('catalog:authors'))
+	else:
+		context ={			
+			'form':AuthorCreateForm(instance = author_instance)
+		}	
+	return render(request,'catalog/update_author.html', context)
+
+
+"""
+Function for Delete author
+"""
+def delete_author(request,pk):
+	author_instance = get_object_or_404(Author,pk=pk)
+	if request.method =='POST':
+		if request.POST.get('yes_delete'):
+			try:
+				author_instance.delete()
+				messages.success(request,_('Author deleted successfully'))
+				return HttpResponseRedirect(reverse('catalog:authors'))
+			except ProtectedError:
+				messages.warning(request,_('Author is associated with book and can not be deleted'))
+				return HttpResponseRedirect(reverse('catalog:authors'))
+		else:
+			return HttpResponseRedirect(reverse('catalog:authors'))	
+	else:
+		form = AuthorDeleteForm()
+	return render(request,'catalog/author_confirm_delete.html',{'form':form})

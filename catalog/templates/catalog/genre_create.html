@@ -1,0 +1,11 @@
+{% extends 'base.html'%}
+{% block content %}
+<h3>Create Genre</h3>
+<br>
+
+<form method="POST" action="">
+	{% csrf_token %}
+	{{form.as_p}}
+	<input type="Submit" name="" value="Submit">	
+</form>
+{% endblock %}

@@ -12,5 +12,7 @@ import os
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myjaan.settings")
+# # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'oldname.settings')
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'local_lib.settings')
 
 application = get_wsgi_application()
